@@ -1,21 +1,40 @@
+const { discordBotToken, 
+        userAgent, 
+        redditBotId, 
+        redditBotSecret, 
+        redditUserUsername, 
+        redditUserPassword,
+        mongoURI } = require('./config.json');
+
+const mongoose = require('mongoose');
+const RedditPost = require('./redditPost')
 var snoowrap = require('snoowrap');
 const { Client, Intents } = require('discord.js');
-const { discordBotToken, userAgent, clientId, clientSecret, username, password } = require('./config.json');
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then((result) => console.log('connected to db'))
+    .catch((err) => console.log(err));
 
 const reddit = new snoowrap({
     userAgent: userAgent,
-    clientId: clientId,
-    clientSecret: clientSecret,
-    username: username,
-    password: password
+    clientId: redditBotId,
+    clientSecret: redditBotSecret,
+    username: redditUserUsername,
+    password: redditUserPassword
 });
 
-var query = 'Henry';
+var query = 'Dolphins';
 var subreddit = 'NFL';
 
 reddit.getSubreddit(subreddit).search({query: query, time: 'hour', sort: 'new'}).then(data => {
     data.forEach(listing => {
-        console.log(listing.permalink);
+        const entry = new RedditPost({
+            subreddit: listing.subreddit_name_prefixed,
+            url: "https://www.reddit.com" + listing.permalink,
+            date: listing.created_utc
+        });
+        
+        entry.save();
     });
 });
 
