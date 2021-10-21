@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const schema = mongoose.Schema;
 
 const redditPostSchema = new mongoose.Schema({
-    _id: {
+    postid: {
         type: String,
         required: true
     },

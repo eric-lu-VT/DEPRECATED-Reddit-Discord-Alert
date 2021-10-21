@@ -1,4 +1,5 @@
-const { discordBotToken, 
+const { discordId,
+        discordBotToken, 
         userAgent, 
         redditBotId, 
         redditBotSecret, 
@@ -10,7 +11,11 @@ const mongoose = require('mongoose');
 const RedditPost = require('./redditPost');
 const ServerPost = require('./serverPost');
 var snoowrap = require('snoowrap');
+
 const { Client, Intents } = require('discord.js');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const { commands } = require('./deploy-commands.js');
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Connected to MongoDB'))
@@ -24,47 +29,51 @@ const reddit = new snoowrap({
     password: redditUserPassword
 });
 
-var searchQuery = [
-    {
-        query: "Broncos",
-        subreddit: "NFL"
-    }
-];
-
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 function searchReddit(guildId) {
-    searchQuery.forEach(q => {
-        reddit.getSubreddit(q.subreddit).search({query: q.query, time: 'hour', sort: 'new'}).then(data => {
-            data.forEach(listing => {
-                RedditPost.exists({_id: listing.name}).then((result) => {
-                    if(result) {
-                        console.log("entry already exists");
-                    }
-                    else {
-                        new RedditPost({
-                            _id: listing.name,
-                            subreddit: listing.subreddit_name_prefixed,
-                            url: "https://www.reddit.com" + listing.permalink,
-                            date: listing.created_utc,
-                            guildId: guildId
-                        }).save();
-                        console.log("Made an entry to DB");
-                        ServerPost.findOne({ _id: guildId}, ['channels'])
-                        .then((result) => {
-                            result.channels.forEach(channelId => {
+    ServerPost.findOne({ _id: guildId}, ['channels', 'queries']).then((resdoc) => {        
+        resdoc.queries.forEach(q => {
+            reddit.getSubreddit(q.subreddit).search({query: q.query, time: 'hour', sort: 'new'}).then(data => {
+                data.forEach(listing => {
+                    RedditPost.exists({postid: listing.name, guildId: guildId}).then((result) => {
+                        if(result) {
+                            console.log("entry already exists");
+                        }
+                        else {
+                            new RedditPost({
+                                postid: listing.name,
+                                subreddit: listing.subreddit_name_prefixed,
+                                url: "https://www.reddit.com" + listing.permalink,
+                                date: listing.created_utc,
+                                guildId: guildId
+                            }).save();
+                            console.log("Made an entry to DB");
+                            resdoc.channels.forEach(channelId => {
                                 client.channels.cache.get(channelId).send("https://www.reddit.com" + listing.permalink);
                             });
-                        });
-                    }
-                })
+                        }
+                    });
+                });
             });
         });
     });
 }
 
+ServerPost.find({}, ['_id']).then((doc) => {
+	const rest = new REST({ version: '9' }).setToken(discordBotToken);
+    doc.forEach(res => {
+        console.log(res._id);
+        rest.put(Routes.applicationGuildCommands(discordId, res._id), { body: commands })
+            .then(() => console.log('Successfully registered application commands.'))
+            .catch(console.error);
+        });
+});
+
 client.once('ready', () => {
 	console.log('Connected to Discord');
+    // const Guilds = client.guilds.cache.map(guild => guild.id);
+    // console.log(Guilds);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -90,7 +99,11 @@ client.on('interactionCreate', async interaction => {
             else {
                 new ServerPost({
                     _id: interaction.guildId,
-                    channels: [interaction.channelId]
+                    channels: [interaction.channelId],
+                    queries: [{
+                        query: "Henry",
+                        subreddit: "NFL"
+                    }]
                 }).save();
             }
         });
@@ -118,33 +131,17 @@ client.on('interactionCreate', async interaction => {
                 }
                 subredditStr = query[query.length - 1];
             }
-            searchQuery.push({
-                query: queryStr,
-                subreddit: subredditStr
-            });
-            console.log(searchQuery);
+            ServerPost.findOneAndUpdate({_id: interaction.guildId}, 
+                { $push : { 'queries': {
+                    query: queryStr,
+                    subreddit: subredditStr
+                }}}, 
+                {upsert: true}).then(data => {});
             await interaction.reply('Added search query:\n{ query: ' + queryStr + ',\nsubreddit: ' + subredditStr + ' }');
         }
-    } else if (commandName === 'search') { // add embed
-        var res = "";
-        searchQuery.forEach(q => {
-            reddit.getSubreddit(q.subreddit).search({query: q.query, time: 'hour', sort: 'new'}).then(data => {
-                data.forEach(listing => {
-                    res += "https://www.reddit.com" + listing.permalink + " \n "; // url
-                });
-                interaction.reply(res);
-            });
-        });
-    }
+    } // add embed
 });
 
 client.login(discordBotToken);
 
 //setInterval(searchReddit, 31000); //300000
-
-/*
-RedditPost.find({ id: listing.name}, 'url')
-    .then((result) => {
-        console.log("Found an entry url: " + result);
-    });
-*/

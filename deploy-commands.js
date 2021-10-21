@@ -1,7 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const { discordId, guildId, discordBotToken } = require('./config.json');
 
 const commands = [
 	new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
@@ -21,12 +18,7 @@ const commands = [
 				.setDescription('/addquery [query] [subreddit]'
 					+ '\nSubreddit is last space separated keyword provided; default = all')
 				.setRequired(true)),
-	new SlashCommandBuilder().setName('search').setDescription('Search subreddit with input term')
 ]
 	.map(command => command.toJSON());
 
-const rest = new REST({ version: '9' }).setToken(discordBotToken);
-
-rest.put(Routes.applicationGuildCommands(discordId, guildId), { body: commands })
-	.then(() => console.log('Successfully registered application commands.'))
-	.catch(console.error);
+module.exports = { commands };

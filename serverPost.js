@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const schema = mongoose.Schema;
-const RedditPostSchema = require('./redditPost');
 
 const serverPostSchema = new mongoose.Schema({
     _id: {
@@ -11,6 +9,13 @@ const serverPostSchema = new mongoose.Schema({
         type: [String],
         required: true
     },
+    queries: {
+        type: [{
+            query: String,
+            subreddit: String,
+        }],
+        required: true
+    }
 }, { timestamps: true });
 
 const ServerPost = mongoose.model('ServerPost', serverPostSchema);
