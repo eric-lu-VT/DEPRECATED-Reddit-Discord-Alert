@@ -12,17 +12,15 @@ const commands = [
 			option.setName('input')
 				.setDescription('The input to echo back')
 				.setRequired(true)),
-	new SlashCommandBuilder().setName('setsubreddit').setDescription('Set subreddit')
+	new SlashCommandBuilder().setName('start').setDescription('Starts the looping search query'),
+	new SlashCommandBuilder().setName('stop').setDescription('Stops the looping search query'),
+	new SlashCommandBuilder().setName('addquery').setDescription('Adds a new query to the search list')
 		.addStringOption(option => 
 			option.setName('input')
-				.setDescription('The input for subreddit')
+				.setDescription('/addquery [query] [subreddit]'
+					+ '\nSubreddit is last space separated keyword provided; default = all')
 				.setRequired(true)),
-	new SlashCommandBuilder().setName('setsearch').setDescription('Set search')
-		.addStringOption(option => 
-			option.setName('input')
-				.setDescription('The input for search')
-				.setRequired(true)),
-	new SlashCommandBuilder().setName('search').setDescription('search subreddit with input term')
+	new SlashCommandBuilder().setName('search').setDescription('Search subreddit with input term')
 ]
 	.map(command => command.toJSON());
 
