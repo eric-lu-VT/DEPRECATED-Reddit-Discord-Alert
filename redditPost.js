@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const redditPostSchema = new mongoose.Schema({
-    id: {
+    _id: {
         type: String,
         required: true
     },
@@ -15,10 +15,6 @@ const redditPostSchema = new mongoose.Schema({
         required: true
     },
     date: {
-        type: String,
-        required: true
-    },
-    channelId: {
         type: String,
         required: true
     },

@@ -12,6 +12,7 @@ const commands = [
 			option.setName('input')
 				.setDescription('The input to echo back')
 				.setRequired(true)),
+	new SlashCommandBuilder().setName('addchannel').setDescription('Adds a channel to where the bot can see'),
 	new SlashCommandBuilder().setName('start').setDescription('Starts the looping search query'),
 	new SlashCommandBuilder().setName('stop').setDescription('Stops the looping search query'),
 	new SlashCommandBuilder().setName('addquery').setDescription('Adds a new query to the search list')
