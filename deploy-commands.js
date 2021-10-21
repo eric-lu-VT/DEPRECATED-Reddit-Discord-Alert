@@ -2,20 +2,20 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const commands = [
 	new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
-	new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
-	new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
-	new SlashCommandBuilder().setName('echo').setDescription('Replies with your input!')
-		.addStringOption(option => 
-			option.setName('input')
-				.setDescription('The input to echo back')
-				.setRequired(true)),
-	new SlashCommandBuilder().setName('addchannel').setDescription('Adds a channel to where the bot can see'),
+	new SlashCommandBuilder().setName('addchannel').setDescription('Allows the bot to post in the current channel'),
+	new SlashCommandBuilder().setName('removechannel').setDescription('Revokes the bot\'s access to post in the current channel'),
 	new SlashCommandBuilder().setName('start').setDescription('Starts the looping search query'),
 	new SlashCommandBuilder().setName('stop').setDescription('Stops the looping search query'),
 	new SlashCommandBuilder().setName('addquery').setDescription('Adds a new query to the search list')
 		.addStringOption(option => 
 			option.setName('input')
 				.setDescription('/addquery [query] [subreddit]'
+					+ '\nSubreddit is last space separated keyword provided; default = all')
+				.setRequired(true)),
+	new SlashCommandBuilder().setName('removequery').setDescription('Removes a query from the search list')
+		.addStringOption(option => 
+			option.setName('input')
+				.setDescription('/removequery [query] [subreddit]'
 					+ '\nSubreddit is last space separated keyword provided; default = all')
 				.setRequired(true)),
 ]

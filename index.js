@@ -8,11 +8,11 @@ const { discordId,
         mongoURI } = require('./config.json');
 
 const mongoose = require('mongoose');
-const RedditPost = require('./redditPost');
-const ServerPost = require('./serverPost');
+const RedditPost = require('./schema/redditPost');
+const ServerPost = require('./schema/serverPost');
 var snoowrap = require('snoowrap');
 
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, MessageEmbed } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { commands } = require('./deploy-commands.js');
@@ -43,14 +43,27 @@ function searchReddit(guildId) {
                         else {
                             new RedditPost({
                                 postid: listing.name,
-                                subreddit: listing.subreddit_name_prefixed,
-                                url: "https://www.reddit.com" + listing.permalink,
+                                subreddit: encodeURI(listing.subreddit_name_prefixed),
+                                url: encodeURI("https://www.reddit.com" + listing.permalink),
                                 date: listing.created_utc,
                                 guildId: guildId
                             }).save();
                             console.log("Made an entry to DB");
+                            
+                            var title = encodeURI(listing.title);
+                            if(title.length > 253) {
+                                title = title.substring(0, 253) + "...";
+                            }
+                                                        
                             resdoc.channels.forEach(channelId => {
-                                client.channels.cache.get(channelId).send("https://www.reddit.com" + listing.permalink);
+                                client.channels.cache.get(channelId).send({embeds : [new MessageEmbed()
+                                    .setColor([255, 165, 0])
+                                    .setAuthor(listing.author.name, "", encodeURI("https://www.reddit.com/u/" + listing.author.name))
+                                    .setTitle(title)
+                                    .setDescription(listing.score + " votes and " + listing.num_comments + " comments so far")
+                                    .setFooter("On " + encodeURI(listing.subreddit_name_prefixed))
+                                    .setTimestamp(listing.created * 1000)
+                                    .setURL("https://www.reddit.com" + encodeURI(listing.permalink))]});
                             });
                         }
                     });
@@ -60,20 +73,20 @@ function searchReddit(guildId) {
     });
 }
 
-ServerPost.find({}, ['_id']).then((doc) => {
-	const rest = new REST({ version: '9' }).setToken(discordBotToken);
-    doc.forEach(res => {
-        console.log(res._id);
-        rest.put(Routes.applicationGuildCommands(discordId, res._id), { body: commands })
-            .then(() => console.log('Successfully registered application commands.'))
-            .catch(console.error);
-        });
-});
+function registerCommands() {
+    ServerPost.find({}, ['_id']).then((doc) => {
+        const rest = new REST({ version: '9' }).setToken(discordBotToken);
+        doc.forEach(res => {
+            rest.put(Routes.applicationGuildCommands(discordId, res._id), { body: commands })
+                .then(() => console.log('Successfully registered application commands.'))
+                .catch(console.error);
+            });
+    });
+}
 
 client.once('ready', () => {
-	console.log('Connected to Discord');
-    // const Guilds = client.guilds.cache.map(guild => guild.id);
-    // console.log(Guilds);
+	registerCommands();
+    console.log('Connected to Discord');
 });
 
 client.on('interactionCreate', async interaction => {
@@ -83,13 +96,8 @@ client.on('interactionCreate', async interaction => {
 
 	if (commandName === 'ping') {
 		await interaction.reply('Pong!');
-	} else if (commandName === 'server') {
-		await interaction.reply(`Server name: ${interaction.guild.name}\nTotal members: ${interaction.guild.memberCount}`);
-	} else if (commandName === 'user') {
-		await interaction.reply(`Your tag: ${interaction.user.tag}\nYour id: ${interaction.user.id}`);
-	} else if (commandName === 'echo') {
-        await interaction.reply(interaction.options.getString("input"));
-    } else if(commandName === 'addchannel') {
+    } 
+    else if(commandName === 'addchannel') {
         ServerPost.exists({_id: interaction.guildId}).then((result) => {
             if(result) {
                 ServerPost.findOneAndUpdate({_id: interaction.guildId}, 
@@ -108,14 +116,21 @@ client.on('interactionCreate', async interaction => {
             }
         });
         await interaction.reply("Added channel " + interaction.channelId + " in server " + interaction.guildId);
+    } 
+    else if (commandName === 'removechannel') {
+        ServerPost.findOneAndUpdate({_id: interaction.guildId}, 
+            { $pull : { 'channels': interaction.channelId}}).then(data => {});
+        await interaction.reply("Removed channel " + interaction.channelId + " in server " + interaction.guildId);
     }
     else if (commandName === 'start') {
-        setInterval(function(){searchReddit(interaction.guildId);}, 31000);
+        setInterval(function(){searchReddit(interaction.guildId);}, 30000);
         await interaction.reply("Starting search loop");
-    } else if (commandName === 'stop') {
+    } 
+    else if (commandName === 'stop') {
         clearInterval(function(){searchReddit(interaction.guildId);});
         await interaction.reply("Stopped search loop");
-    } else if (commandName === 'addquery') {
+    } 
+    else if (commandName === 'addquery') {
         query = interaction.options.getString("input").split(" ");
         var queryStr = "";
         var subredditStr = "";
@@ -139,9 +154,65 @@ client.on('interactionCreate', async interaction => {
                 {upsert: true}).then(data => {});
             await interaction.reply('Added search query:\n{ query: ' + queryStr + ',\nsubreddit: ' + subredditStr + ' }');
         }
-    } // add embed
+    } 
+    else if (commandName === 'removequery') {
+        query = interaction.options.getString("input").split(" ");
+        var queryStr = "";
+        var subredditStr = "";
+        
+        if(query.length > 1) {
+            if(query.length == 1) {
+                queryStr = query[0];
+                subredditStr = "All";
+            }
+            else {
+                for(var i = 0; i < query.length - 1; i++) {
+                    queryStr += query[i];
+                }
+                subredditStr = query[query.length - 1];
+            }
+            ServerPost.findOneAndUpdate({_id: interaction.guildId}, 
+                { $pull : { 'queries': {
+                    query: queryStr,
+                    subreddit: subredditStr
+                }}}).then(data => {});
+            
+            await interaction.reply('Removed search query:\n{ query: ' + queryStr + ',\nsubreddit: ' + subredditStr + ' }');
+        }
+    }
+});
+
+client.on("guildCreate", guild => {
+    var channels = [];
+    guild.channels.cache.forEach((channel) => {
+        if(channel.type == "GUILD_TEXT" 
+        && channel.permissionsFor(client.user).has("VIEW_CHANNEL")
+        && channel.permissionsFor(client.user).has("SEND_MESSAGES")) {
+            channels.push(channel.id);
+        }
+    })
+
+    new ServerPost({
+        _id: guild.id,
+        channels: channels,
+        queries: [{
+            query: "Henry",
+            subreddit: "NFL"
+        }]
+    }).save();
+    // Remove dummy entry in queries
+    ServerPost.findOneAndUpdate({_id: guild.id}, 
+        { $pull : { 'queries': {
+            query: "Henry",
+            subreddit: "NFL"
+        }}}).then(data => {});
+
+    registerCommands();
+});
+
+client.on("guildDelete", guild => {
+    ServerPost.findOneAndRemove({_id: guild.id}).then(data => {});
 });
 
 client.login(discordBotToken);
 
-//setInterval(searchReddit, 31000); //300000
