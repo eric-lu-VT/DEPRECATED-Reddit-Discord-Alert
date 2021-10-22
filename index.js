@@ -68,6 +68,7 @@ function registerCommands() {
     ServerPost.find({}, ['_id']).then((doc) => {
         const rest = new REST({ version: '9' }).setToken(process.env.DISCORDBOTTOKEN);
         doc.forEach(res => {
+            setInterval(function(){searchReddit(res._id);}, 30000);
             rest.put(Routes.applicationGuildCommands(process.env.DISCORDID, res._id), { body: commands })
                 .then().catch(console.error);
             });
@@ -118,41 +119,6 @@ client.on('interactionCreate', async interaction => {
             .setTimestamp();
         await interaction.reply({embeds : [embd]});
     }
-    else if (commandName === 'start') {
-        setInterval(function(){searchReddit(interaction.guildId);}, 30000);
-
-        var embd = new MessageEmbed()
-            .setColor([46, 204, 113])
-            .setTitle("Starting search!")
-            .setDescription("Now starting the search loop...")
-            .addField("Server", String(interaction.guildId))
-            .setAuthor(interaction.user.username, 
-                `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.png?size=256`)
-            .setTimestamp();
-        ServerPost.findOne({ _id: interaction.guildId}, ['channels']).then((resdoc) => { 
-            resdoc.channels.forEach(c => {
-                embd.addField("Channel", String(c));
-            });
-            interaction.reply({embeds : [embd]});
-        });
-    } 
-    else if (commandName === 'stop') {
-        clearInterval(function(){searchReddit(interaction.guildId);});
-        var embd = new MessageEmbed()
-            .setColor([46, 204, 113])
-            .setTitle("Stopping search!")
-            .setDescription("Stopped the search loop in this server.")
-            .addField("Server", String(interaction.guildId))
-            .setAuthor(interaction.user.username, 
-                `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.png?size=256`)
-            .setTimestamp();
-        ServerPost.findOne({ _id: interaction.guildId}, ['channels']).then((resdoc) => { 
-            resdoc.channels.forEach(c => {
-                embd.addField("Channel", String(c));
-            });
-            interaction.reply({embeds : [embd]});
-        });
-    } 
     else if (commandName === 'addquery') {
         query = interaction.options.getString("input").split(" ");
         var queryStr = "";
