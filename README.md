@@ -61,6 +61,10 @@ The following are the steps to take to set this bot up yourself:
     - The string underneath ```personal use script``` corresponds to ```"redditBotId"``` in ```config.json```.
     - ```secret``` corresponds to ```"redditBotSecret"``` in ```config.json```.
 
+### Part 3: Create MongoDB database
+
+### Part 4: Host bot on Heroku
+
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
 
