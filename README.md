@@ -20,8 +20,9 @@ Automatically detects new posts containg the specified queries and in the specif
 The following are the steps to take to set this bot up yourself:
 
 ### Part 1: Repo Setup
-1) Fork the repository.
-2) You will need to upload a ```config.json``` file with the following attributes:
+1) Download the repository and save it wherever you want on your local machine. 
+    - In the console, download the necessary dependencies with ```npm install```.
+2) You will need to keep track of the following attributes:
 ```
 "discordBotToken": // Bot's Discord token
 "discordId": // Client ID under OAuth2
@@ -69,7 +70,23 @@ Following the proceeding steps will get you the values you need.
 - The URL with ```mongodb+srv:...``` corresponds to ```"mongoURI"```.
 
 ### Part 5: Host Bot on Heroku
-
+In the console, run the following commands:
+```
+$ git add .
+$ git commit -m " "
+$ heroku login
+$ heroku 
+$ heroku config:set DB_PASSWORD=[Your value here]
+$ heroku config:set DISCORDBOTTOKEN=[Your value here]
+$ heroku config:set DISCORDID=[Your value here]
+$ heroku config:set MONGOURI=[Your value here]
+$ heroku config:set REDDITBOTID=[Your value here]
+$ heroku config:set REDDITBOTSECRET=[Your value here]
+$ heroku config:set REDDITUSERUSERNAME=[Your value here]
+$ heroku config:set REDDUTUSERPASSWORD=[Your value here]
+$ heroku config:set USERAGENT=[Your value here]
+$ git push heroku HEAD:main
+```
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
 
