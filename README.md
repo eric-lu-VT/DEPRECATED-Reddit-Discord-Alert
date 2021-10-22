@@ -22,15 +22,15 @@ Here is a pseudocode outline of how the bot works:
     - If Bot is added to new server, add the corresponding server info to the database
     - If Bot is removed from a server, remove the corresponding server info from the database
 
-
-
 ### Commands
 - ```/ping```: Replies with pong!
 - ```/addchannel```: Allows the bot to post in the channel in which the command was sent.
 - ```/removechannel```: Revokes the bot's access to post in the channel in which the command was sent.
 - ```/addquery [query] [subreddit]```: Tells the bot to search for the specified query in the specified subreddit, if such an entry **does not** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
 - ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
+
 ## Public Version Installation
+Coming soon...
 
 ## Self-Hosting Installation
 The following are the steps to take to set this bot up yourself:
