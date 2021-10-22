@@ -1,12 +1,3 @@
-const { discordId,
-        discordBotToken, 
-        userAgent, 
-        redditBotId, 
-        redditBotSecret, 
-        redditUserUsername, 
-        redditUserPassword,
-        mongoURI } = require('./config.json');
-
 const mongoose = require('mongoose');
 const RedditPost = require('./schema/redditPost');
 const ServerPost = require('./schema/serverPost');
@@ -17,16 +8,16 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { commands } = require('./deploy-commands.js');
 
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Connected to MongoDB'))
     .catch((err) => console.log(err));
 
 const reddit = new snoowrap({
-    userAgent: userAgent,
-    clientId: redditBotId,
-    clientSecret: redditBotSecret,
-    username: redditUserUsername,
-    password: redditUserPassword
+    userAgent: process.env.userAgent,
+    clientId: process.env.redditBotId,
+    clientSecret: process.env.redditBotSecret,
+    username: process.env.redditUserUsername,
+    password: process.env.redditUserPassword
 });
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -75,9 +66,9 @@ function searchReddit(guildId) {
 
 function registerCommands() {
     ServerPost.find({}, ['_id']).then((doc) => {
-        const rest = new REST({ version: '9' }).setToken(discordBotToken);
+        const rest = new REST({ version: '9' }).setToken(process.env.discordBotToken);
         doc.forEach(res => {
-            rest.put(Routes.applicationGuildCommands(discordId, res._id), { body: commands })
+            rest.put(Routes.applicationGuildCommands(process.env.discordId, res._id), { body: commands })
                 .then().catch(console.error);
             });
     });
@@ -279,4 +270,4 @@ client.on("guildDelete", guild => {
     ServerPost.findOneAndRemove({_id: guild.id}).then(data => {});
 });
 
-client.login(discordBotToken);
+client.login(process.env.discordBotToken);
