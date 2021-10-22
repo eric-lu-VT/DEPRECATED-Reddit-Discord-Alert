@@ -75,7 +75,7 @@ In the console, run the following commands:
 $ git add .
 $ git commit -m " "
 $ heroku login
-$ heroku 
+$ heroku create
 $ heroku config:set DB_PASSWORD=[Your value here]
 $ heroku config:set DISCORDBOTTOKEN=[Your value here]
 $ heroku config:set DISCORDID=[Your value here]
