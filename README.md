@@ -4,7 +4,7 @@ Automatically detects new posts containg the specified queries and in the specif
 
 ## Impressions
 
-![img](https://i.imgur.com/KXSwGSQ.png)
+![img](https://i.imgur.com/9S5ztg4.png)
 ![img](https://i.imgur.com/zZSpwYH.png)
 
 ## Overview
