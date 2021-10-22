@@ -30,7 +30,7 @@ Here is a pseudocode outline of how the bot works:
 - ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
 
 ## Public Version Installation
-Coming soon...
+Public hosting coming soon...
 
 ## Self-Hosting Installation
 The following are the steps to take to set this bot up yourself:
