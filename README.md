@@ -92,9 +92,9 @@ $ git add .
 $ git commit -m " "
 $ heroku login
 $ heroku create
-$ heroku config:set DB_PASSWORD=[Your value here]
 $ heroku config:set DISCORDBOTTOKEN=[Your value here]
 $ heroku config:set DISCORDID=[Your value here]
+$ heroku config:set USERAGENT=[Your value here]
 $ heroku config:set MONGOURI=[Your value here]
 $ heroku config:set REDDITBOTID=[Your value here]
 $ heroku config:set REDDITBOTSECRET=[Your value here]
