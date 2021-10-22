@@ -18,7 +18,7 @@ Here is a pseudocode outline of how the bot works:
                 - If yes, do nothing (if the database has the entry, it means it has been searched for from the current server already)
                 - If no, send the query to Discord, and send the query to the database with an expiration date of one hour
 - Constantly listen for commands/events
-    - If user runns comamand ( ```/ping``` or ```/addchannel``` or ```/removechannel``` or  ```/addquery [query] [subreddit]``` or ```/removequery [query] [subreddit]```), respond appropriately
+    - If user runs comamand ( ```/ping``` or ```/addchannel``` or ```/removechannel``` or  ```/addquery [query] [subreddit]``` or ```/removequery [query] [subreddit]```), respond appropriately
     - If Bot is added to new server, add the corresponding server info to the database
     - If Bot is removed from a server, remove the corresponding server info from the database
 
