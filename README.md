@@ -4,6 +4,9 @@ Automatically detects new posts containg the specified queries and in the specif
 
 ## Impressions
 
+![img](https://i.imgur.com/KXSwGSQ.png)
+![img](https://i.imgur.com/wtaF1M5.png)
+
 ## Overview
 
 ### Commands
@@ -89,5 +92,4 @@ $ git push heroku HEAD:main
 ```
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
-
-## Credits
+- Make stop work in a multithreading context
