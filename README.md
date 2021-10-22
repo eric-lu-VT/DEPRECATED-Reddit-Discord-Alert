@@ -42,13 +42,12 @@ The following are the steps to take to set this bot up yourself:
 8) On the left sidebar, select "OAuth2".
 9) Under "Scopes", check off "bot" and "applications.commands".
 10) Under "Bot permissions", select the permissions you wish to give the bot.
-   - At minimum, you will need to give the bot the following permissions:
-     - ```Send Messages```
-     - ```Read Message History```
-   - Alternatively, you can give the bot ```Administrator``` and be done with it, although depending on the server you might not want to or be allowed to do so.
+    - At minimum, you will need to give the bot the following permissions:
+      - ```Send Messages```
+      - ```Read Message History```
+    - Alternatively, you can give the bot ```Administrator``` and be done with it, although depending on the server you might not want to or be allowed to do so.
 11) After Step 9), Discord will auto generate a link to you. Go to that address. From there, you will be able to select which server(s) you'd like to add the bot to.
-  - To create a brand new server to add the bot to, press the green plus button on the left sidebar on the normal Discord window (```Add a server```), then click ```Create a server```, input whatever server name you want and then finally click ```Create```.
-12) 
+    - To create a brand new server to add the bot to, press the green plus button on the left sidebar on the normal Discord window (```Add a server```), then click ```Create a server```, input whatever server name you want and then finally click ```Create```.
 
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
