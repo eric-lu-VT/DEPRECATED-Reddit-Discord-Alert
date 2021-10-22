@@ -8,16 +8,16 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { commands } = require('./deploy-commands.js');
 
-mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Connected to MongoDB'))
     .catch((err) => console.log(err));
 
 const reddit = new snoowrap({
-    userAgent: process.env.userAgent,
-    clientId: process.env.redditBotId,
-    clientSecret: process.env.redditBotSecret,
-    username: process.env.redditUserUsername,
-    password: process.env.redditUserPassword
+    userAgent: process.env.USERAGENT,
+    clientId: process.env.REDDITBOTID,
+    clientSecret: process.env.REDDITBOTSECRET,
+    username: process.env.REDDITUSERUSERNAME,
+    password: process.env.REDDITUSERPASSWORD
 });
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -66,9 +66,9 @@ function searchReddit(guildId) {
 
 function registerCommands() {
     ServerPost.find({}, ['_id']).then((doc) => {
-        const rest = new REST({ version: '9' }).setToken(process.env.discordBotToken);
+        const rest = new REST({ version: '9' }).setToken(process.env.DISCORDBOTTOKEN);
         doc.forEach(res => {
-            rest.put(Routes.applicationGuildCommands(process.env.discordId, res._id), { body: commands })
+            rest.put(Routes.applicationGuildCommands(process.env.DISCORDID, res._id), { body: commands })
                 .then().catch(console.error);
             });
     });
@@ -270,4 +270,4 @@ client.on("guildDelete", guild => {
     ServerPost.findOneAndRemove({_id: guild.id}).then(data => {});
 });
 
-client.login(process.env.discordBotToken);
+client.login(process.env.DISCORDBOTTOKEN);
