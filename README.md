@@ -20,8 +20,9 @@ Automatically detects new posts containg the specified queries and in the specif
 The following are the steps to take to set this bot up yourself:
 
 ### Part 1: Discord API
-1) Download the repository and save it wherever you plan on hosting the bot.
-2) In the repository, add a ```config.json``` file with the following attributes:
+1) Download the repository and save it wherever you plan on hosting the bot. 
+    - In the console, download the necessary dependencies with ```npm install```.
+3) In the repository, add a ```config.json``` file with the following attributes:
 ```
 "discordBotToken": // Bot's Discord token
 "discordId": // Discord ID of the bot's owner
@@ -62,8 +63,10 @@ The following are the steps to take to set this bot up yourself:
     - ```secret``` corresponds to ```"redditBotSecret"``` in ```config.json```.
 
 ### Part 3: Create MongoDB database
+[Follow this guide to create a free MongoDB Atlas cluster.](https://www.youtube.com/watch?v=rPqRyYJmx2g) 
+- The URL with ```mongodb+srv:...``` corresponds to ```"mongoURI"```.
 
-### Part 4: Host bot on Heroku
+### Part 4: Host Bot on Heroku
 
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
