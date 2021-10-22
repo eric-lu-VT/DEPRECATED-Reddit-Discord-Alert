@@ -5,16 +5,29 @@ Automatically detects new posts containg the specified queries and in the specif
 ## Impressions
 
 ![img](https://i.imgur.com/KXSwGSQ.png)
-![img](https://i.imgur.com/wtaF1M5.png)
+![img](https://i.imgur.com/zZSpwYH.png)
 
 ## Overview
+This bot primarily uses the Discord API (through [discord.js](https://discord.js.org/#/)) and the Reddit API (through [snoowrap](https://github.com/not-an-aardvark/snoowrap)), in conjuction with a MongoDB for the backend (through [mongoose](https://mongoosejs.com/)). 
+Here is a pseudocode outline of how the bot works:
+- On login, initialize commands to Discord API and begin infinite timer
+- Every 30 seconds
+    - For each Discord server Bot is in
+        - Search for the specified query in the specified subreddit in the past hour for all search entries attributed to the given server
+            - Check database if the query has been searched for, and from the current server. 
+                - If yes, do nothing (if the database has the entry, it means it has been searched for from the current server already)
+                - If no, send the query to Discord, and send the query to the database with an expiration date of one hour
+- Constantly listen for commands/events
+    - If user runns comamand ( ```/ping``` or ```/addchannel``` or ```/removechannel``` or  ```/addquery [query] [subreddit]``` or ```/removequery [query] [subreddit]```), respond appropriately
+    - If Bot is added to new server, add the corresponding server info to the database
+    - If Bot is removed from a server, remove the corresponding server info from the database
+
+
 
 ### Commands
 - ```/ping```: Replies with pong!
 - ```/addchannel```: Allows the bot to post in the channel in which the command was sent.
 - ```/removechannel```: Revokes the bot's access to post in the channel in which the command was sent.
-- ```/start```: Starts the looping search query in the server.
-- ```/stop```: Stops the looping search query in the server.
 - ```/addquery [query] [subreddit]```: Tells the bot to search for the specified query in the specified subreddit, if such an entry **does not** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
 - ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
 ## Public Version Installation
@@ -92,4 +105,4 @@ $ git push heroku HEAD:main
 ```
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
-- Make stop work in a multithreading context
+- Add manual start/stop (requires multithreading)
