@@ -25,7 +25,7 @@ The following are the steps to take to set this bot up yourself:
 3) In the repository, add a ```config.json``` file with the following attributes:
 ```
 "discordBotToken": // Bot's Discord token
-"discordId": // Discord ID of the bot's owner
+"discordId": // Client ID under OAuth2
 
 "userAgent": "Whatever", // This can be anything; it just names the bot on Reddit (which doesn't really matter)
 "redditBotId": // Reddit ID of the bot's owner
@@ -35,32 +35,32 @@ The following are the steps to take to set this bot up yourself:
 
 "mongoURI": // Link that connects Bot to MongoDB database
 ```
-3) [Find your Discord ID](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-), which corresponds to ```"discordId"``` in ```config.json```.
 4) Go to the [Discord Developer Console](https://discord.com/developers/applications) and click "New application".
 5) On the left sidebar, select "Bot".
 6) Click "Add Bot"
-7) Press "Click to Reveal Token" and copy the listed token. That token corresponds to ```"discordBotToken"``` in ```config.json```.
+7) In the "Bot" section, press "Click to Reveal Token" and copy the listed token. That token corresponds to ```"discordBotToken"``` in ```config.json```.
 8) On the left sidebar, select "OAuth2".
+    - The "Client ID" listed there corresponds to ```"discordId"``` in ```config.json```.
 9) Under "Scopes", check off "bot" and "applications.commands".
 10) Under "Bot permissions", select the permissions you wish to give the bot.
     - At minimum, you will need to give the bot the following permissions:
-      - ```Send Messages```
-      - ```Read Message History```
+        - ```Send Messages```
+        - ```Read Message History```
     - Alternatively, you can give the bot ```Administrator``` and be done with it, although depending on the server you might not want to or be allowed to do so.
-11) After Step 9), Discord will auto generate a link to you. Go to that address. From there, you will be able to select which server(s) you'd like to add the bot to.
-    - To create a brand new server to add the bot to, press the green plus button on the left sidebar on the normal Discord window (```Add a server```), then click ```Create a server```, input whatever server name you want and then finally click ```Create```.
+11) After Step 10), Discord will auto generate a link to you. Go to that address. From there, you will be able to select which server(s) you'd like to add the bot to.
+    - To create a brand new server to add the bot to, press the green plus button on the left sidebar on the normal Discord window ("Add a server"), then click "Create a server", input whatever server name you want and then finally click "Create".
 
 ### Part 2: Reddit API
 1) Log into the Reddit account on which you wish to host the bot. (While you're at it, fill out ```"redditUserUsername"``` and ```"redditUserPassword"``` in ```config.json```.
-2) Go to the [Reddit Application Console](https://ssl.reddit.com/prefs/apps/). Scroll down and click on ```create app```.
+2) Go to the [Reddit Application Console](https://ssl.reddit.com/prefs/apps/). Scroll down and click on "create app".
     - For the name field, put whatever you want.
-    - Click on ```Script for personal use. Will only have access to the developers accounts```
+    - Click on "Script for personal use. Will only have access to the developers accounts".
     - For the description field, put whatever you want.
-    - Don't put anything for the ```about url```.
-    - For ```redirect uri```, enter ```https://reddit.com```.
-3) Click on ```edit``` on the app you just created. 
-    - The string underneath ```personal use script``` corresponds to ```"redditBotId"``` in ```config.json```.
-    - ```secret``` corresponds to ```"redditBotSecret"``` in ```config.json```.
+    - Don't put anything for the "about url".
+    - For "redirect uri", enter "https://reddit.com".
+3) Click on "edit" on the app you just created. 
+    - The string underneath "personal use script" corresponds to ```"redditBotId"``` in ```config.json```.
+    - "secret" corresponds to ```"redditBotSecret"``` in ```config.json```.
 
 ### Part 3: Create MongoDB database
 [Follow this guide to create a free MongoDB Atlas cluster.](https://www.youtube.com/watch?v=rPqRyYJmx2g) 
