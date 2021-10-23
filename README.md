@@ -33,7 +33,7 @@ Here is a pseudocode outline of how the bot works:
 Public hosting coming soon...
 
 ## Self-Hosting Installation
-[See here](https://github.com/eric-lu-VT/Reddit-Discord-Alert/wiki) for instruction on how to self-host this bot.
+[See here](https://github.com/eric-lu-VT/Reddit-Discord-Alert/wiki) for instructions on how to self-host this bot.
 
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
