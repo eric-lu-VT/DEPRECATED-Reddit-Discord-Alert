@@ -21,42 +21,45 @@ const reddit = new snoowrap({
 });
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+var handle = null;
 
-function searchReddit(guildId) {
-    ServerPost.findOne({ _id: guildId}, ['channels', 'queries']).then((resdoc) => {        
-        resdoc.queries.forEach(q => {
-            reddit.getSubreddit(q.subreddit).search({query: q.query, time: 'hour', sort: 'new'}).then(data => {
-                data.forEach(listing => {
-                    RedditPost.exists({postid: listing.name, guildId: guildId}).then((result) => {
-                        if(result) {
-                            console.log("entry already exists");
-                        }
-                        else {
-                            new RedditPost({
-                                postid: listing.name,
-                                subreddit: (listing.subreddit_name_prefixed),
-                                url: ("https://www.reddit.com" + listing.permalink),
-                                date: listing.created_utc,
-                                guildId: guildId
-                            }).save();
-                            console.log("Made an entry to DB");
-                            
-                            var title = (listing.title);
-                            if(title.length > 253) {
-                                title = title.substring(0, 253) + "...";
+function searchReddit(guilds) {
+    guilds.forEach((guildId) => {
+        ServerPost.findOne({ _id: guildId}, ['channels', 'queries']).then((resdoc) => {        
+            resdoc.queries.forEach(q => {
+                reddit.getSubreddit(q.subreddit).search({query: q.query, time: 'hour', sort: 'new'}).then(data => {
+                    data.forEach(listing => {
+                        RedditPost.exists({postid: listing.name, guildId: guildId}).then((result) => {
+                            if(result) {
+                                console.log("entry already exists");
                             }
-                                                        
-                            resdoc.channels.forEach(channelId => {
-                                client.channels.cache.get(channelId).send({embeds : [new MessageEmbed()
-                                    .setColor([255, 165, 0])
-                                    .setAuthor(listing.author.name, "", encodeURI("https://www.reddit.com/u/" + listing.author.name))
-                                    .setTitle(title)
-                                    .setDescription(listing.score + " votes and " + listing.num_comments + " comments so far")
-                                    .setFooter("On " + listing.subreddit_name_prefixed)
-                                    .setTimestamp(listing.created * 1000)
-                                    .setURL("https://www.reddit.com" + listing.permalink)]});
-                            });
-                        }
+                            else {
+                                new RedditPost({
+                                    postid: listing.name,
+                                    subreddit: (listing.subreddit_name_prefixed),
+                                    url: ("https://www.reddit.com" + listing.permalink),
+                                    date: listing.created_utc,
+                                    guildId: guildId
+                                }).save();
+                                console.log("Made an entry to DB");
+                                
+                                var title = (listing.title);
+                                if(title.length > 253) {
+                                    title = title.substring(0, 253) + "...";
+                                }
+                                                            
+                                resdoc.channels.forEach(channelId => {
+                                    client.channels.cache.get(channelId).send({embeds : [new MessageEmbed()
+                                        .setColor([255, 165, 0])
+                                        .setAuthor(listing.author.name, "", encodeURI("https://www.reddit.com/u/" + listing.author.name))
+                                        .setTitle(title)
+                                        .setDescription(listing.score + " votes and " + listing.num_comments + " comments so far")
+                                        .setFooter("On " + listing.subreddit_name_prefixed)
+                                        .setTimestamp(listing.created * 1000)
+                                        .setURL("https://www.reddit.com" + listing.permalink)]});
+                                });
+                            }
+                        });
                     });
                 });
             });
@@ -65,14 +68,18 @@ function searchReddit(guildId) {
 }
 
 function registerCommands() {
+    var guilds = [];
+    
     ServerPost.find({}, ['_id']).then((doc) => {
         const rest = new REST({ version: '9' }).setToken(process.env.DISCORDBOTTOKEN);
         doc.forEach(res => {
-            setInterval(function(){searchReddit(res._id);}, 30000);
+            guilds.push(res._id);
             rest.put(Routes.applicationGuildCommands(process.env.DISCORDID, res._id), { body: commands })
                 .then().catch(console.error);
             });
     });
+
+    handle = setInterval(() => searchReddit(guilds), 30000);
 }
 
 client.once('ready', () => {
@@ -148,7 +155,7 @@ client.on('interactionCreate', async interaction => {
                 `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.png?size=256`)
             .setTimestamp();
 
-        ServerPost.exists({queries: {$elemMatch: { query: queryStr, subreddit: subredditStr}}})
+        ServerPost.exists({_id: interaction.guildId, queries: {$elemMatch: {query: queryStr, subreddit: subredditStr}}})
         .then((result) => {
             if(!result) {
                 ServerPost.findOneAndUpdate({_id: interaction.guildId}, 
@@ -162,7 +169,7 @@ client.on('interactionCreate', async interaction => {
                 embd.setDescription("Added the following query:");
             }
             interaction.reply({embeds : [embd]});
-        })
+        });
     } 
     else if (commandName === 'removequery') {
         query = interaction.options.getString("input").split(" ");
@@ -193,7 +200,7 @@ client.on('interactionCreate', async interaction => {
                 `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.png?size=256`)
             .setTimestamp();
 
-        ServerPost.exists({queries: {$elemMatch: { query: queryStr, subreddit: subredditStr}}})
+        ServerPost.exists({_id: interaction.guildId, queries: {$elemMatch: { query: queryStr, subreddit: subredditStr}}})
         .then((result) => {
             if(result) {
                 ServerPost.findOneAndUpdate({_id: interaction.guildId}, 
@@ -206,11 +213,12 @@ client.on('interactionCreate', async interaction => {
                 embd.setDescription("Removed the following query:");
             }
             interaction.reply({embeds : [embd]});
-        })
+        });
     }
 });
 
 client.on("guildCreate", guild => {
+    clearInterval(handle);
     var channels = [];
     guild.channels.cache.forEach((channel) => {
         if(channel.type == "GUILD_TEXT" 
@@ -233,7 +241,9 @@ client.on("guildCreate", guild => {
 });
 
 client.on("guildDelete", guild => {
+    clearInterval(handle);
     ServerPost.findOneAndRemove({_id: guild.id}).then(data => {});
+    registerCommands();
 });
 
 client.login(process.env.DISCORDBOTTOKEN);
