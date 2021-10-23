@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const RedditPost = require('./schema/redditPost');
 const ServerPost = require('./schema/serverPost');
@@ -11,6 +13,7 @@ const { commands } = require('./deploy-commands.js');
 mongoose.connect(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => console.log('Connected to MongoDB'))
     .catch((err) => console.log(err));
+
 
 const reddit = new snoowrap({
     userAgent: process.env.USERAGENT,
