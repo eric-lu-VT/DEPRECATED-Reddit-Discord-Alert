@@ -38,18 +38,16 @@ The following are the steps to take to set this bot up yourself:
 ### Part 1: Repo Setup
 1) Download the repository and save it wherever you want on your local machine. 
     - In the console, download the necessary dependencies with ```npm install```.
-2) You will need to keep track of the following attributes:
+2) You will need to make a ```.env``` file with the following attributes:
 ```
-"discordBotToken": // Bot's Discord token
-"discordId": // Client ID under OAuth2
-
-"userAgent": "Whatever", // This can be anything; it just names the bot on Reddit (which doesn't really matter)
-"redditBotId": // Reddit ID of the bot's owner
-"redditBotSecret": // Bot's Reddit token
-"redditUserUsername": // Reddit username of the bot's owner
-"redditUserPassword": // Reddut password of the bot's owner
-
-"mongoURI": // Link that connects Bot to MongoDB database
+DISCORDBOTTOKEN=// Bot's Discord token
+DISCORDID=// Client ID under OAuth2
+USERAGENT=Whatever // This can be anything; it just names the bot on Reddit (which doesn't really matter)
+REDDITBOTID=// Reddit ID of the bot's owner
+REDDITBOTSECRET=// Bot's Reddit token
+REDDITUSERUSERNAME=// Reddit username of the bot's owner
+REDDITUSERPASSWORD=// Reddit password of the bot's owner
+MONGOURI=// Link that connects Bot to MongoDB database
 ```
 Following the proceeding steps will get you the values you need.
 
@@ -85,24 +83,11 @@ Following the proceeding steps will get you the values you need.
 [Follow this guide to create a free MongoDB Atlas cluster.](https://www.youtube.com/watch?v=rPqRyYJmx2g) 
 - The URL with ```mongodb+srv:...``` corresponds to ```"mongoURI"```.
 
-### Part 5: Host Bot on Heroku
-In the console, run the following commands:
-```
-$ git add .
-$ git commit -m " "
-$ heroku login
-$ heroku create
-$ heroku config:set DISCORDBOTTOKEN=[Your value here]
-$ heroku config:set DISCORDID=[Your value here]
-$ heroku config:set USERAGENT=[Your value here]
-$ heroku config:set MONGOURI=[Your value here]
-$ heroku config:set REDDITBOTID=[Your value here]
-$ heroku config:set REDDITBOTSECRET=[Your value here]
-$ heroku config:set REDDITUSERUSERNAME=[Your value here]
-$ heroku config:set REDDUTUSERPASSWORD=[Your value here]
-$ heroku config:set USERAGENT=[Your value here]
-$ git push heroku HEAD:main
-```
+### Part 5: Hosting Bot on AWS
+Make sure your ```.env``` file is complete before hosting on AWS.
+
+Then, [follow this guide to get and setup a free AWS EC2 VPS (for one year), and host your bot on it.](https://shiffman.net/a2z/bot-ec2/)
+
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
 - Add manual start/stop (requires multithreading)
