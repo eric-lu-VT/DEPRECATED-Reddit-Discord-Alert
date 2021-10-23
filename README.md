@@ -31,7 +31,7 @@ Here is a pseudocode outline of how the bot works:
 
 ## Public Version Installation
 [Click here](https://discord.com/api/oauth2/authorize?client_id=899822083285090394&permissions=2147568640&scope=bot%20applications.commands) to invite the bot to your server.
-- Bot has the following permissisons: 
+- Bot has the following permissions:
     - ```Send Messages```
     - ```Read Message History```
     - ```Use Slash Commands```
