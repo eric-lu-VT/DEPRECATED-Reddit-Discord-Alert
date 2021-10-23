@@ -86,7 +86,7 @@ Following the proceeding steps will get you the values you need.
 ### Part 5: Hosting Bot on AWS
 Make sure your ```.env``` file is complete before hosting on AWS.
 
-Then, [follow this guide to get and setup a free EC2 VPS, and host your bot on it.](https://shiffman.net/a2z/bot-ec2/)
+Then, [follow this guide to get and setup a free AWS EC2 VPS (for one year), and host your bot on it.](https://shiffman.net/a2z/bot-ec2/)
 
 ## Roadmap
 - Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
