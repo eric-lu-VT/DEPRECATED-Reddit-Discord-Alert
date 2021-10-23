@@ -30,7 +30,13 @@ Here is a pseudocode outline of how the bot works:
 - ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
 
 ## Public Version Installation
-Public hosting coming soon...
+[Click here](https://discord.com/api/oauth2/authorize?client_id=899822083285090394&permissions=2147568640&scope=bot%20applications.commands) to invite the bot to your server.
+- Bot has the following permissisons: 
+    - ```Send Messages```
+    - ```Read Message History```
+    - ```Use Slash Commands```
+    - ```View Channels```
+    - ```Embed Links```
 
 ## Self-Hosting Installation
 [See here](https://github.com/eric-lu-VT/Reddit-Discord-Alert/wiki) for instructions on how to self-host this bot.
