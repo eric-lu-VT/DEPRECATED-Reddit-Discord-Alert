@@ -26,8 +26,8 @@ Here is a pseudocode outline of how the bot works:
 - ```/ping```: Replies with pong!
 - ```/addchannel```: Allows the bot to post in the channel in which the command was sent.
 - ```/removechannel```: Revokes the bot's access to post in the channel in which the command was sent.
-- ```/addquery [query] [subreddit]```: Tells the bot to search for the specified query in the specified subreddit, if such an entry **does not** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
-- ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
+- ```/addquery [query] [subreddit]```: Tells the bot to search for the specified query in the specified subreddit, if such an entry **does not** already exist. (Subreddit is last space separated keyword provided; defaults to "all" if only one space separated keyword provided.)
+- ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defaults to "all" if only one space separated keyword provided.)
 
 ## Public Version Installation
 [Click here](https://discord.com/api/oauth2/authorize?client_id=899822083285090394&permissions=2147568640&scope=bot%20applications.commands) to invite the bot to your server.
