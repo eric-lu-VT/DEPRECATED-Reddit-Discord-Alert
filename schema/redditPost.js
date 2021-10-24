@@ -29,8 +29,11 @@ const redditPostSchema = new mongoose.Schema({
     },
     createdAt: { // date and time this entry was created
         type: Date,
-        expires: '60m', // Auto delete entry after 60 minutes
         default: Date.now
+    },
+    expireAt: {
+        type: Date,
+        default: Date.now() + 60 * 60 * 1000   // expires in 60 minutes
     }
 }, { timestamps: true }); 
 redditPostSchema.index(); 
