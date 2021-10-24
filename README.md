@@ -1,6 +1,6 @@
 # Reddit-Discord-Alert
 
-Automatically detects new posts containg the specified queries and in the specified subreddits, and sends them to the corresponding Discord server.
+Automatically detects new posts made on Reddit that match the specified queries and are in the specified subreddits, and sends them to Discord.
 
 ## Impressions
 
@@ -30,64 +30,17 @@ Here is a pseudocode outline of how the bot works:
 - ```/removequery [query] [subreddit]```: Tells the bot to stop searching for the specified query in the specified subreddit, if such an entry **does** already exist. (Subreddit is last space separated keyword provided; defauls to "all" if only one space separated keyword provided.)
 
 ## Public Version Installation
-Public hosting coming soon...
+[Click here](https://discord.com/api/oauth2/authorize?client_id=899822083285090394&permissions=2147568640&scope=bot%20applications.commands) to invite the bot to your server.
+- Bot has the following permissions:
+    - ```Send Messages```
+    - ```Read Message History```
+    - ```Use Slash Commands```
+    - ```View Channels```
+    - ```Embed Links```
 
 ## Self-Hosting Installation
-The following are the steps to take to set this bot up yourself:
-
-### Part 1: Repo Setup
-1) Download the repository and save it wherever you want on your local machine. 
-    - In the console, download the necessary dependencies with ```npm install```.
-2) You will need to make a ```.env``` file with the following attributes:
-```
-DISCORDBOTTOKEN=// Bot's Discord token
-DISCORDID=// Client ID under OAuth2
-USERAGENT=Whatever // This can be anything; it just names the bot on Reddit (which doesn't really matter)
-REDDITBOTID=// Reddit ID of the bot's owner
-REDDITBOTSECRET=// Bot's Reddit token
-REDDITUSERUSERNAME=// Reddit username of the bot's owner
-REDDITUSERPASSWORD=// Reddit password of the bot's owner
-MONGOURI=// Link that connects Bot to MongoDB database
-```
-Following the proceeding steps will get you the values you need.
-
-### Part 2: Discord API
-1) Go to the [Discord Developer Console](https://discord.com/developers/applications) and click "New application".
-2) On the left sidebar, select "Bot".
-3) Click "Add Bot"
-4) In the "Bot" section, press "Click to Reveal Token" and copy the listed token. That token corresponds to ```"discordBotToken"``` in ```config.json```.
-5) On the left sidebar, select "OAuth2".
-    - The "Client ID" listed there corresponds to ```"discordId"``` in ```config.json```.
-6) Under "Scopes", check off "bot" and "applications.commands".
-7) Under "Bot permissions", select the permissions you wish to give the bot.
-    - At minimum, you will need to give the bot the following permissions:
-        - ```Send Messages```
-        - ```Read Message History```
-    - Alternatively, you can give the bot ```Administrator``` and be done with it, although depending on the server you might not want to or be allowed to do so.
-8) After Step 7), Discord will auto generate a link to you. Go to that address. From there, you will be able to select which server(s) you'd like to add the bot to.
-    - To create a brand new server to add the bot to, press the green plus button on the left sidebar on the normal Discord window ("Add a server"), then click "Create a server", input whatever server name you want and then finally click "Create".
-
-### Part 3: Reddit API
-1) Log into the Reddit account on which you wish to host the bot. (While you're at it, fill out ```"redditUserUsername"``` and ```"redditUserPassword"``` in ```config.json```.
-2) Go to the [Reddit Application Console](https://ssl.reddit.com/prefs/apps/). Scroll down and click on "create app".
-    - For the name field, put whatever you want.
-    - Click on "Script for personal use. Will only have access to the developers accounts".
-    - For the description field, put whatever you want.
-    - Don't put anything for the "about url".
-    - For "redirect uri", enter "https://reddit.com".
-3) Click on "edit" on the app you just created. 
-    - The string underneath "personal use script" corresponds to ```"redditBotId"``` in ```config.json```.
-    - "secret" corresponds to ```"redditBotSecret"``` in ```config.json```.
-
-### Part 4: Create MongoDB database
-[Follow this guide to create a free MongoDB Atlas cluster.](https://www.youtube.com/watch?v=rPqRyYJmx2g) 
-- The URL with ```mongodb+srv:...``` corresponds to ```"mongoURI"```.
-
-### Part 5: Hosting Bot on AWS
-Make sure your ```.env``` file is complete before hosting on AWS.
-
-Then, [follow this guide to get and setup a free AWS EC2 VPS (for one year), and host your bot on it.](https://shiffman.net/a2z/bot-ec2/)
+[See here](https://github.com/eric-lu-VT/Reddit-Discord-Alert/wiki) for instructions on how to self-host this bot.
 
 ## Roadmap
-- Add compound indexing to reduce time complexity of redditpost database search from ```O(n)``` to ```O(1)```
+- Add compound indexing to reduce time complexity of database search from ```O(n)``` to ```O(1)```
 - Add manual start/stop (requires multithreading)
