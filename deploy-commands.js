@@ -1,3 +1,8 @@
+/**
+ * Defines the slash commands that the bot will accept.
+ * @author @eric-lu-VT (Eric Lu)
+ */
+
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const commands = [
