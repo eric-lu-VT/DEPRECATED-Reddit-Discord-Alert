@@ -44,5 +44,6 @@ Here is a pseudocode outline of how the bot works:
 [See here](https://github.com/eric-lu-VT/Reddit-Discord-Alert/wiki) for instructions on how to self-host this bot.
 
 ## Roadmap
-- Add compound indexing to reduce time complexity of database search from ```O(n)``` to ```O(1)```
-- Add manual start/stop (requires multithreading)
+- ~~Add compound indexing to reduce time complexity of database search from ```O(n)``` to ```O(1)```~~
+- ~~Add manual start/stop (requires multithreading)~~
+See new version for new updates (including these fixes)
