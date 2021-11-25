@@ -1,3 +1,5 @@
+# PROJECT IS DEPRICATED; SEE NEW VERSION [HERE](https://github.com/eric-lu-VT/Reddit-Discord-Notifier)
+
 # Reddit-Discord-Alert
 
 Automatically detects new posts made on Reddit that match the specified queries and are in the specified subreddits, and sends them to Discord.
