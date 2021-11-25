@@ -46,4 +46,5 @@ Here is a pseudocode outline of how the bot works:
 ## Roadmap
 - ~~Add compound indexing to reduce time complexity of database search from ```O(n)``` to ```O(1)```~~
 - ~~Add manual start/stop (requires multithreading)~~
+
 See new version for new updates (including these fixes)
