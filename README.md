@@ -1,4 +1,4 @@
-# PROJECT IS DEPRICATED; SEE NEW VERSION [HERE](https://github.com/eric-lu-VT/Reddit-Discord-Notifier)
+# PROJECT IS DEPRECATED; SEE NEW VERSION [HERE](https://github.com/eric-lu-VT/Reddit-Discord-Notifier)
 
 # Reddit-Discord-Alert
 
